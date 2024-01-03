@@ -69,17 +69,17 @@ for pipeline_type in pipeline_types:
     performance_metrics.append(metrics)
 
     confusion_matrix = [[counter_tp, counter_fn], [counter_fp, counter_tn]]
-    sn.heatmap(data=confusion_matrix, annot=True, fmt=".0f")
-    plt.title("Confusion Matrix for " + pipeline_type)
-    plt.xlabel("Predicted Value")
-    plt.ylabel("Actual Value")
+    #sn.heatmap(data=confusion_matrix, annot=True, fmt=".0f")
+    #plt.title("Confusion Matrix for " + pipeline_type)
+    #plt.xlabel("Predicted Value")
+    #plt.ylabel("Actual Value")
     
-    plt.savefig("Performance_Metrics/" + pipeline_type + "-confusion-matrix.png")
+    #plt.savefig("Performance_Metrics/" + pipeline_type + "-confusion-matrix.png")
 
-    plt.show()
+    #plt.show()
 
 fig, ax = plt.subplots(figsize=(20, 10))
-sn.heatmap(data=performance_metrics, annot=True, fmt=".6f", xticklabels=["Accuracy", "Recall", "Precision", "F1-Score"], yticklabels=pipeline_types)
+sn.heatmap(data=performance_metrics, annot=True, fmt=".6f", annot_kws={"size": 16}, xticklabels=["Accuracy", "Recall", "Precision", "F1-Score"], yticklabels=pipeline_types)
 plt.title("Table of Performance Metrics")
 plt.xlabel("Performance Metrics")
 plt.ylabel("Pipelines")
