@@ -2,6 +2,7 @@ import pysam
 import seaborn as sn 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.colors import ListedColormap
 
 VCF_folder_path = "/home/buse/Desktop/ITU/Courses/Bioinformatics/term_project/BLG348E-Introduction-to-Bioinformatics-Term-Project/VCF/"
 
@@ -43,7 +44,9 @@ for file_name_i in range(len(files)):
                 variant_index = all_ids.index(variant_id)
                 heatmap_data[variant_index, file_name_i] = 1
 
-sn.clustermap(data=heatmap_data, method='average', cmap='coolwarm', fmt=".4f", figsize=(15, 8), xticklabels=["ground-truth", *pipeline_types])
+colors = ['#82BAED', '#13599C']
+custom_cmap = ListedColormap(colors)
+sn.clustermap(data=heatmap_data, method='average', cmap=custom_cmap, fmt=".4f", figsize=(15, 8), xticklabels=["ground-truth", *pipeline_types])
 plt.title('Clustering Pipelines Based on All Variants')
 
 plt.savefig("Heatmaps/clustering_based_on_all_variants.png")
