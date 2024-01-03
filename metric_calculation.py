@@ -27,6 +27,9 @@ with pysam.VariantFile(ground_truth_file_path, "r") as ground_truth_vcf:
 # 4 Metrics (Accuracy, Recall, Precision, F1-Score) on columns, 12 pipelines on rows.
 performance_metrics = []
 
+# One element per pipeline
+variant_counts = []
+
 for pipeline_type in pipeline_types:
     metrics = []
 
@@ -37,6 +40,8 @@ for pipeline_type in pipeline_types:
     with pysam.VariantFile(filtered_file_path, "r") as filtered_vcf:
         for variant in filtered_vcf:
             filtered_ids.append(str(variant).split("\t")[1])
+
+    variant_counts.append(len(filtered_ids))
 
     counter_tn = 0
     with pysam.VariantFile(unfiltered_file_path, "r") as unfiltered_vcf:
@@ -69,19 +74,29 @@ for pipeline_type in pipeline_types:
     performance_metrics.append(metrics)
 
     confusion_matrix = [[counter_tp, counter_fn], [counter_fp, counter_tn]]
-    #sn.heatmap(data=confusion_matrix, annot=True, fmt=".0f")
-    #plt.title("Confusion Matrix for " + pipeline_type)
-    #plt.xlabel("Predicted Value")
-    #plt.ylabel("Actual Value")
+    sn.heatmap(data=confusion_matrix, annot=True, fmt=".0f")
+    plt.title("Confusion Matrix for " + pipeline_type)
+    plt.xlabel("Predicted Value")
+    plt.ylabel("Actual Value")
     
-    #plt.savefig("Performance_Metrics/" + pipeline_type + "-confusion-matrix.png")
+    plt.savefig("Performance_Metrics/" + pipeline_type + "-confusion-matrix.png")
 
-    #plt.show()
+    plt.show()
 
-fig, ax = plt.subplots(figsize=(20, 10))
-sn.heatmap(data=performance_metrics, annot=True, fmt=".6f", annot_kws={"size": 16}, xticklabels=["Accuracy", "Recall", "Precision", "F1-Score"], yticklabels=pipeline_types)
+plt.figure(figsize=(10, 5))
+plt.subplots_adjust(left=0.25, right=0.9, top=0.9, bottom=0.1)
+sn.heatmap(data=performance_metrics, annot=True, fmt=".6f", xticklabels=["Accuracy", "Recall", "Precision", "F1-Score"], yticklabels=pipeline_types)
 plt.title("Table of Performance Metrics")
 plt.xlabel("Performance Metrics")
 plt.ylabel("Pipelines")
 plt.savefig("Performance_Metrics/performance_metrics.png")
+plt.show()
+
+plt.figure(figsize=(10, 5))
+plt.subplots_adjust(left=0.25, right=0.9, top=0.9, bottom=0.1)
+plt.barh(pipeline_types, variant_counts, color="blue")
+plt.ylabel("Pipeline Types")
+plt.xlabel("Variant counts")
+plt.title("Variant Counts of Each Pipeline")
+plt.savefig("Performance_Metrics/variant_counts.png")
 plt.show()
